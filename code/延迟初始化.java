@@ -16,53 +16,43 @@ import java.util.Date;
  * 注：在单例模式的实现中有一种实现是利用类加载的顺序来达到在第一次使用时初始化的目地的，但那种方式只适用于类属性，而非对象属性。
  * </pre>
  */
-public class 延迟初始化 implements IDataHolder<Date> {
-	private ILazyData<Date> data = new LazyData<Date>(this, () -> new Date());
+public class 延迟初始化 {
+	private DataHolder<Date> holder = new DataHolder<Date>(new IDataCreator<Date>() {
+		@Override
+		public Date creatData() {
+			return new Date();
+		}
+	});
 
 	public Date getDate() {
-		return data.getData();
+		return holder.data.getData();
 	}
 
 	public static void main(String[] args) throws Exception {
 		延迟初始化 t = new 延迟初始化();
 		System.out.println(t.getDate());
-		Thread.sleep(1000);
 		System.out.println(t.getDate());
-		Thread.sleep(1000);
-		System.out.println(new 延迟初始化().getDate());
 	}
-
-	@Override
-	public void setData(ILazyData<Date> data) {
-		this.data = data;
-	}
-
-	@Override
-	public ILazyData<Date> getData() {
-		return this.data;
-	}
-}
-
-interface IDataHolder<T> {
-	void setData(ILazyData<T> data);
-
-	ILazyData<T> getData();
-}
-
-interface ILazyData<T> {
-	T getData();
 }
 
 interface IDataCreator<T> {
 	T creatData();
 }
 
-class LazyData<T> implements ILazyData<T> {
+class DataHolder<T> {
+	LazyData<T> data;
 
-	private IDataHolder<T> holder;
+	public DataHolder(IDataCreator<T> creator) {
+		data = new LazyData<T>(this, creator);
+	}
+}
+
+class LazyData<T> {
+
+	private DataHolder<T> holder;
 	private IDataCreator<T> creator;
 
-	public LazyData(IDataHolder<T> holder, IDataCreator<T> creator) {
+	public LazyData(DataHolder<T> holder, IDataCreator<T> creator) {
 		this.holder = holder;
 		this.creator = creator;
 	}
@@ -70,17 +60,13 @@ class LazyData<T> implements ILazyData<T> {
 	private LazyData() {
 	}
 
-	@Override
 	public T getData() {
-		ILazyData<T> data = new LazyData<T>() {
-			T data = creator.creatData();
-
-			@Override
+		final T d = creator.creatData();
+		this.holder.data = new LazyData<T>() {
 			public T getData() {
-				return data;
+				return d;
 			}
 		};
-		this.holder.setData(data);
-		return data.getData();
+		return d;
 	}
 }
