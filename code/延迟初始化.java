@@ -17,12 +17,7 @@ import java.util.Date;
  * </pre>
  */
 public class 延迟初始化 {
-	private DataHolder<Date> holder = new DataHolder<Date>(new IDataCreator<Date>() {
-		@Override
-		public Date creatData() {
-			return new Date();
-		}
-	});
+	private DataHolder<Date> holder = new DataHolder<Date>(() -> new Date());
 
 	public Date getDate() {
 		return holder.data.getData();
