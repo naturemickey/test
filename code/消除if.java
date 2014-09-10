@@ -1,19 +1,15 @@
 import java.util.Date;
+import java.util.function.Supplier;
 
 public class 消除if {
-
-	private static interface Holder<T> {
-		T getData();
-	}
-
-	private Holder<Date> data = () -> {
+	private Supplier<Date> data = () -> {
 		Date d = new Date();
 		data = () -> d;
 		return d;
 	};
 
 	public Date getDate() {
-		return data.getData();
+		return data.get();
 	}
 
 	public static void main(String[] args) throws Exception {
