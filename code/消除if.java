@@ -16,5 +16,4 @@ public class 消除if {
 		消除if a = new 消除if();
 		System.out.println(a.getDate());
 	}
-
 }
