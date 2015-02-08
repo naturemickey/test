@@ -1,37 +1,31 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import calc.INode;
-import calc.IOp;
-import calc.OpNode;
 
 public class RandomExpression {
 
 	private static Random r = new Random();
 
-	public static void main(String[] args) {
-		Stream.generate(() -> 0).limit(20).map(a -> genExp()).forEach(System.out::println);
-	}
-
-	private static INode generate() {
-		if (r.nextInt(2) > 0)
-			return randomNum;
-		return genExp();
-	}
-
-	private static INode randomNum = () -> r.nextInt(999);
-
-	private static INode genExp() {
-		switch (r.nextInt(4)) {
-		case 0:
-			return new OpNode(IOp.ADD, generate(), randomNum);
-		case 1:
-			return new OpNode(IOp.SUB, generate(), randomNum);
-		case 2:
-			return new OpNode(IOp.MUL, generate(), randomNum);
-		case 3:
+	public static void main(String[] args) throws Exception {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter("exps"));) {
+			for (int i = 0; i < 100; ++i) {
+				bw.write(genExp());
+				bw.write("\n");
+			}
 		}
-		return new OpNode(IOp.DIV, generate(), randomNum);
 	}
 
+	private static String genExp() {
+		int len = 2 + r.nextInt(5);
+		return Stream.generate(() -> r.nextInt(100)).limit(len).map(i -> "" + genop() + i)
+				.collect(Collectors.joining()).substring(1);
+	}
+
+	private static final char[] ops = { '+', '-', '*', '/', };
+
+	private static char genop() {
+		return ops[r.nextInt(4)];
+	}
 }
