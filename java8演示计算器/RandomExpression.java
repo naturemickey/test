@@ -1,6 +1,5 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -12,10 +11,7 @@ public class RandomExpression {
 	private static final char[] ops = { '+', '-', '*', '/', };
 
 	public static void main(String[] args) throws Exception {
-		List<String> exps = new ArrayList<>();
-		for (int i = 0; i < 100; ++i) {
-			exps.add(genExp());
-		}
+		List<String> exps = Stream.generate(() -> 1).limit(100).map(i -> genExp()).collect(Collectors.toList());
 		Files.write(Paths.get("exps"), exps);
 	}
 
