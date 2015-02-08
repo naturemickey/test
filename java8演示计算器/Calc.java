@@ -15,7 +15,7 @@ public class Calc {
 
 		List<String> res = lines.stream().map(exp -> {
 			try {
-				return exp + "=" + engine.eval(exp);
+				return exp + " = " + engine.eval(exp);
 			} catch (Exception e) {
 				throw new RuntimeException();
 			}
