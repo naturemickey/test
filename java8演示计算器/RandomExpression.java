@@ -11,7 +11,7 @@ public class RandomExpression {
 	private static final char[] ops = { '+', '-', '*', '/', };
 
 	public static void main(String[] args) throws Exception {
-		List<String> exps = Stream.generate(() -> 1).limit(100).map(i -> genExp()).collect(Collectors.toList());
+		List<String> exps = Stream.generate(RandomExpression::genExp).limit(100).collect(Collectors.toList());
 		Files.write(Paths.get("exps"), exps);
 	}
 
