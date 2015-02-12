@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,7 +9,7 @@ import java.util.stream.Stream;
 
 import javax.swing.JFrame;
 
-public class Test2 extends JFrame {
+public class Test extends JFrame {
 
 	private static final long serialVersionUID = -759745851194255793L;
 
@@ -23,30 +24,38 @@ public class Test2 extends JFrame {
 	private static final Fun f2 = fdx.apply(f1);
 
 	public static void main(String[] args) {
-		new Test2();
+		new Test();
 	}
 
-	public Test2() {
+	public Test() {
 		super.setBounds(10, 50, winWidth, winHeight);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setResizable(false);
 		super.setVisible(true);
+		final Container cp = super.getContentPane();
+		final int leftLimit = (winWidth - cp.getWidth()) / 2;
+		final int rightLimit = winWidth - leftLimit - 1;
+		final int topLimit = winHeight - cp.getHeight() - leftLimit;
+		final int bottomLimit = winHeight - leftLimit - 1;
 
 		MouseAdapter ma = new MouseAdapter() {
 			private int x;
+			private int y;
 
 			@Override
 			public void mousePressed(MouseEvent e) {
 				x = e.getX();
+				y = e.getY();
 			}
 
 			public void mouseDragged(MouseEvent e) {
 				xoffset += (e.getX() - x);
-				if (xoffset < 0)
-					xoffset = 0;
-				else if (xoffset > winWidth)
-					xoffset = winWidth;
+				yoffset += (e.getY() - y);
+
+				xoffset = (xoffset < leftLimit) ? leftLimit : ((xoffset > rightLimit) ? rightLimit : xoffset);
+				yoffset = (yoffset < topLimit) ? topLimit : ((yoffset > bottomLimit) ? bottomLimit : yoffset);
 				x = e.getX();
+				y = e.getY();
 				repaint();
 			}
 		};
@@ -56,9 +65,9 @@ public class Test2 extends JFrame {
 
 	private final int winWidth = 1000;
 	private final int winHeight = (int) (winWidth * (Math.sqrt(5) - 1) / 2);
-	private final int yoffset = winHeight / 2;
 	private final int bs = 100;
 	private int xoffset = winWidth - winHeight;
+	private int yoffset = winHeight / 2;
 
 	@Override
 	public void paint(Graphics g) {
