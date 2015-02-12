@@ -19,7 +19,7 @@ public class Test extends JFrame {
 
 	private static final double dx = 0.05; // 如果太小影响绘图的速度，太大就不精确。
 	// 求任意函数的微分函数
-	private static final Function<Fun, Fun> fdx = (Fun dd) -> x -> (dd.f(x + dx) - dd.f(x)) / dx;
+	private static final Function<Fun, Fun> fdx = dd -> x -> (dd.f(x + dx) - dd.f(x)) / dx;
 	private static final Fun f1 = Math::sin;
 	private static final Fun f2 = fdx.apply(f1);
 
@@ -32,6 +32,7 @@ public class Test extends JFrame {
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setResizable(false);
 		super.setVisible(true);
+
 		final Container cp = super.getContentPane();
 		final int leftLimit = (winWidth - cp.getWidth()) / 2;
 		final int rightLimit = winWidth - leftLimit - 1;
