@@ -84,16 +84,17 @@ public class Test2 extends JFrame {
 	private void paintStep(Graphics g, Color color, Fun f, double x) {
 		g.setColor(color);
 		double y = f.f(x);
-		if (Double.isNaN(y))
+		if (Double.isNaN(y) || Double.isInfinite(y))
 			return;
 		int x1 = (int) (x * bs);
 		int y1 = (int) (yoffset + (y * bs) * -1);
 		x += dx;
 		y = f.f(x);
-		if (Double.isNaN(y))
+		if (Double.isNaN(y) || Double.isInfinite(y))
 			return;
 		int x2 = (int) (x * bs);
 		int y2 = (int) (yoffset + (y * bs) * -1);
-		g.drawLine(xoffset + x1, y1, xoffset + x2, y2);
+		if ((0 < y1 && y1 < winHeight) || (0 < y2 && y2 < winHeight))
+			g.drawLine(xoffset + x1, y1, xoffset + x2, y2);
 	}
 }
