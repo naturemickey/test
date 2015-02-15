@@ -19,8 +19,8 @@ public class Test extends JFrame {
 
 	private static final double dx = 0.05; // 如果太小影响绘图的速度，太大就不精确。
 	// 求任意函数的微分函数
-	private static final Function<Fun, Fun> fdx = dd -> x -> (dd.f(x + dx) - dd.f(x)) / dx;
-	private static final Fun f1 = Math::sin;
+	private static final Function<Fun, Fun> fdx = fun -> x -> (fun.f(x + dx) - fun.f(x)) / dx;
+	private static final Fun f1 = x -> Math.sin(x * x / 4);
 	private static final Fun f2 = fdx.apply(f1);
 
 	public static void main(String[] args) {
@@ -104,7 +104,8 @@ public class Test extends JFrame {
 			return;
 		int x2 = (int) (x * bs);
 		int y2 = (int) (yoffset + (y * bs) * -1);
-		if ((0 < y1 && y1 < winHeight) || (0 < y2 && y2 < winHeight))
-			g.drawLine(xoffset + x1, y1, xoffset + x2, y2);
+		if ((y1 < 0 && y2 < 0) || (winHeight < y1 && winHeight < y2))
+			return;
+		g.drawLine(xoffset + x1, y1, xoffset + x2, y2);
 	}
 }
