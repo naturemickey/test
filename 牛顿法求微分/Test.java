@@ -16,12 +16,12 @@ public class Test extends JFrame {
 	private static final long serialVersionUID = -759745851194255793L;
 
 	public static interface Fun {
-		double f(double d);
+		double __(double d);
 	}
 
-	private static final double dx = 0.01;
+	private static final double dx = 0.005;
 	// 求任意函数的微分函数
-	private static final Function<Fun, Fun> fdx = fun -> x -> (fun.f(x + dx) - fun.f(x)) / dx;
+	private static final Function<Fun, Fun> fdx = f -> x -> (f.__(x + dx) - f.__(x)) / dx;
 	private static final Fun f1 = x -> Math.sin(x * x / 4);
 	private static final Fun f2 = fdx.apply(f1);
 
@@ -103,13 +103,13 @@ public class Test extends JFrame {
 
 	private void paintStep(Graphics2D g, Color color, Fun f, double x) {
 		g.setColor(color);
-		double y = f.f(x);
+		double y = f.__(x);
 		if (Double.isNaN(y) || Double.isInfinite(y))
 			return;
 		int x1 = (int) (x * bs);
 		int y1 = (int) (winHeight + (y * bs) * -1);
 		x += dx;
-		y = f.f(x);
+		y = f.__(x);
 		if (Double.isNaN(y) || Double.isInfinite(y))
 			return;
 		int x2 = (int) (x * bs);
