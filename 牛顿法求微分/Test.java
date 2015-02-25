@@ -33,7 +33,27 @@ public class Test extends JFrame {
 		super.setBounds(10, 50, winWidth, winHeight);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setResizable(false);
-		initBf();
+		{
+			// init bf
+			int bfWidth = winWidth * 2;
+			int bfHeight = winHeight * 2;
+			bf = new BufferedImage(bfWidth, bfHeight, BufferedImage.TYPE_INT_RGB);
+			Graphics2D bg = (Graphics2D) bf.createGraphics();
+			bg.fillRect(0, 0, bfWidth, bfHeight);
+
+			bg.setColor(Color.LIGHT_GRAY);
+			int step = 9;
+			Stream.iterate(0, i -> i + step).limit(bfWidth / step)
+					.forEach(i -> bg.drawLine(i, winHeight, i + step / 2, winHeight));
+			Stream.iterate(0, i -> i + step).limit(bfHeight / step)
+					.forEach(i -> bg.drawLine(winWidth, i, winWidth, i + step / 2));
+
+			bg.setStroke(new BasicStroke(2f));
+			for (double x1 = 0 - winWidth; x1 < bfWidth; x1 += dx) {
+				paintStep(bg, Color.RED, f1, x1);
+				paintStep(bg, Color.BLUE, f2, x1);
+			}
+		}
 		super.setVisible(true);
 
 		final Container cp = super.getContentPane();
@@ -74,32 +94,11 @@ public class Test extends JFrame {
 	private int xoffset = -winHeight;
 	private int yoffset = -winHeight / 2;
 
-	private BufferedImage bf;
+	private final BufferedImage bf;
 
 	@Override
 	public void paint(Graphics g) {
 		g.drawImage(bf, xoffset, yoffset, null);
-	}
-
-	private void initBf() {
-		int bfWidth = winWidth * 2;
-		int bfHeight = winHeight * 2;
-		bf = new BufferedImage(bfWidth, bfHeight, BufferedImage.TYPE_INT_RGB);
-		Graphics2D bg = (Graphics2D) bf.createGraphics();
-		bg.fillRect(0, 0, bfWidth, bfHeight);
-
-		bg.setColor(Color.LIGHT_GRAY);
-		int step = 4;
-		Stream.iterate(0, i -> i + step).limit(bfWidth / step)
-				.forEach(i -> bg.drawLine(i, winHeight, i + step / 2, winHeight));
-		Stream.iterate(0, i -> i + step).limit(bfHeight / step)
-				.forEach(i -> bg.drawLine(winWidth, i, winWidth, i + step / 2));
-
-		bg.setStroke(new BasicStroke(2f));
-		for (double x = 0 - winWidth; x < bfWidth; x += dx) {
-			paintStep(bg, Color.RED, f1, x);
-			paintStep(bg, Color.BLUE, f2, x);
-		}
 	}
 
 	private void paintStep(Graphics2D g, Color color, Fun f, double x) {
