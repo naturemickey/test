@@ -1,5 +1,3 @@
-package 傅里叶变换;
-
 import static java.lang.Math.PI;
 import static java.lang.Math.sin;
 
@@ -23,10 +21,10 @@ public class Test extends JFrame {
 		double __(double d);
 	}
 
-	private static final double dx = 0.005;
+	private static final double dx = 0.01;
 	private static final Fun f = t -> {
 		double y = 0;
-		int 频域 = 20;
+		int 频域 = 100;
 		while (--频域 > 0) {
 			double w = 频域 % 2 == 0 ? 0 : 频域;
 			double a = 4 / PI / 频域;
@@ -62,7 +60,7 @@ public class Test extends JFrame {
 			bg.setStroke(new BasicStroke(2f));
 			doublePair dp = new doublePair();
 			for (double x = 0 - winWidth; x < bfWidth; x += dx) {
-				dp = paintStep(bg, Color.RED, f, x, dp._x, dp._y);
+				dp = paintStep(bg, Color.RED, f, x, dp);
 			}
 		}
 		super.setVisible(true);
@@ -117,11 +115,13 @@ public class Test extends JFrame {
 		double _y = Double.NaN;
 	}
 
-	private doublePair paintStep(Graphics2D g, Color color, Fun f, double x, double lastX, double lastY) {
+	private doublePair paintStep(Graphics2D g, Color color, Fun f, double x, doublePair lastDp) {
 		g.setColor(color);
 
-		double thisY = f.__(x);
 		double thisX = x;
+		double thisY = f.__(x);
+		double lastX = lastDp._x;
+		double lastY = lastDp._y;
 
 		doublePair dp = new doublePair();
 		dp._y = thisY;
