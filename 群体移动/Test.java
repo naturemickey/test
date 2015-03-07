@@ -20,7 +20,7 @@ public class Test extends JFrame {
 	public static final int count = 100;
 
 	public static void main(String[] args) {
-		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		// System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		new Test();
 	}
 
@@ -79,10 +79,7 @@ class Bee implements Runnable {
 			return;
 		List<pairHolder> phl = this.group.stream().filter(bee -> bee != this)
 				.map(bee -> new pairHolder(distance(x, y, bee.x, bee.y), bee)).collect(Collectors.toList());
-		phl.sort((a, b) -> {
-			double d = a.ds - b.ds;
-			return d > 0 ? 1 : d < 0 ? -1 : 0;
-		});
+		phl.sort((a, b) -> a.ds > b.ds ? 1 : a.ds < b.ds ? -1 : 0);
 
 		for (Bee bee : phl.subList(0, neighborsCount).stream().map(p -> p.bee).collect(Collectors.toList())) {
 			double d1 = distance(x, y, bee.x, bee.y);
