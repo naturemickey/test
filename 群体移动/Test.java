@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -15,10 +14,10 @@ public class Test extends JFrame {
 
 	private static final long serialVersionUID = -8424996879509102365L;
 
-	private final int winWidth = 1000;
-	private final int winHeight = (int) (winWidth * (Math.sqrt(5) - 1) / 2);
-	private final ExecutorService es = Executors.newCachedThreadPool();
-	private final int count = 100;
+	public static final int winWidth = 1000;
+	public static final int winHeight = (int) (winWidth * (Math.sqrt(5) - 1) / 2);
+	public static final ExecutorService es = Executors.newCachedThreadPool();
+	public static final int count = 100;
 
 	public static void main(String[] args) {
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
@@ -96,9 +95,11 @@ class Bee implements Runnable {
 					return;
 			}
 		}
-		draw(g, x, y, x1, y1);
-		x = x1;
-		y = y1;
+		if (x1 > 0 && x1 < Test.winWidth && y1 > 0 && y1 < Test.winHeight) {
+			draw(g, x, y, x1, y1);
+			x = x1;
+			y = y1;
+		}
 	}
 
 	private static synchronized void draw(Graphics g, int x, int y, int x1, int y1) {
