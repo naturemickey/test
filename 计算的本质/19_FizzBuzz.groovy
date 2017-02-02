@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.ir.TernaryNode
+
 import java.util.stream.Collectors
 
 def ZERO  = {p -> {x -> x}}
@@ -106,6 +108,23 @@ def NUM37 = ADD(NUM20)(NUM17)
 def NUM38 = ADD(NUM20)(NUM18)
 def NUM39 = ADD(NUM20)(NUM19)
 def NUM40 = ADD(NUM20)(NUM20)
+def HANDRED = MULTIPLY(NUM10)(NUM10)
+
+def DIV = Z{f -> {m -> {n ->
+    IF (IS_LESS_OR_EQUAL(n)(m)) (
+            {x -> INCREMENT(f(SUB(m)(n))(n))(x)}
+    ) (ZERO)
+}}}
+
+def PUSH = {l -> {x -> FOLD(l)(UNSHIFT(EMPTY)(x))(UNSHIFT)}}
+
+def TO_DIGITS = Z{f -> {n -> PUSH(
+        IF (IS_LESS_OR_EQUAL(n)(DECREMENT(NUM10))) (
+                EMPTY
+        ) (
+                {x -> f(DIV(n)(NUM10))(x)}
+        )
+)(MOD(n)(NUM10))}}
 
 // test:
 def to_integer = {num -> num {it + 1} (0)}
@@ -123,13 +142,20 @@ def to_array   = {p ->
 }
 def to_string  = {to_array(it).collect{to_char(it)}.join("")}
 
-println(to_char(NUM9))
-println(to_char(NUM35))
-
 def FIZZ     = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(EMPTY)(NUM35))(NUM35))(NUM18))(NUM15)
 def BUZZ     = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(EMPTY)(NUM35))(NUM35))(NUM30))(NUM11)
 def FIZZBUZZ = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(BUZZ )(NUM35))(NUM35))(NUM18))(NUM15)
 
-println(to_string(FIZZ))
-println(to_string(BUZZ))
-println(to_string(FIZZBUZZ))
+def fb = MAP(RANGE(ONE)(HANDRED))({N ->
+    IF (IS_ZERO(MOD(N)(NUM15))) (
+            FIZZBUZZ
+    ) (IF (IS_ZERO(MOD(N)(THREE))) (
+            FIZZ
+    ) (IF (IS_ZERO(MOD(N)(FIVE))) (
+            BUZZ
+    ) (
+            TO_DIGITS(N)
+    )))
+})
+
+to_array(fb).each {println(to_string(it))}

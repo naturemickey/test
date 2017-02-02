@@ -107,10 +107,17 @@ def NUM38 = ADD(NUM20)(NUM18)
 def NUM39 = ADD(NUM20)(NUM19)
 def NUM40 = ADD(NUM20)(NUM20)
 
+def DIV = Z{f -> {m -> {n ->
+    IF (IS_LESS_OR_EQUAL(n)(m)) (
+            {x -> INCREMENT(f(SUB(m)(n))(n))(x)}
+    ) (ZERO)
+}}}
+
+def PUSH = {l -> {x -> FOLD(l)(UNSHIFT(EMPTY)(x))(UNSHIFT)}}
+
 // test:
 def to_integer = {num -> num {it + 1} (0)}
 def to_boolean = {bool -> bool(true)(false)}
-def to_char    = {"0123456789abcdefghijklmnopqrstuvwxyz"[to_integer(it)]}
 def to_array   = {p ->
     def a = [];
 
@@ -121,15 +128,9 @@ def to_array   = {p ->
 
     a
 }
-def to_string  = {to_array(it).collect{to_char(it)}.join("")}
 
-println(to_char(NUM9))
-println(to_char(NUM35))
+def list123456 = PUSH(RANGE(ONE)(FIVE))(NUM6)
+def list612345 = UNSHIFT(RANGE(ONE)(FIVE))(NUM6)
 
-def FIZZ     = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(EMPTY)(NUM35))(NUM35))(NUM18))(NUM15)
-def BUZZ     = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(EMPTY)(NUM35))(NUM35))(NUM30))(NUM11)
-def FIZZBUZZ = UNSHIFT(UNSHIFT(UNSHIFT(UNSHIFT(BUZZ )(NUM35))(NUM35))(NUM18))(NUM15)
-
-println(to_string(FIZZ))
-println(to_string(BUZZ))
-println(to_string(FIZZBUZZ))
+println(to_array(list123456).collect{to_integer(it)}.join(","))
+println(to_array(list612345).collect{to_integer(it)}.join(","))
