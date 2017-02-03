@@ -1,4 +1,3 @@
-import java.util.stream.Collectors
 
 def ZERO  = {p -> {x -> x}}
 def ONE   = {p -> {x -> p(x)}}
